@@ -141,6 +141,7 @@ app.get('/plot_multiple', async function (req, res) {
 		var songValues_arr = resp.body.audio_features
 			.filter(track => track).map(async (track) => {
 				// console.log("TRACK: ", track)
+				var name = track_names.find( track_name => track_name.id === track.id).name
 				return {
 					danceability: track.danceability,
 					energy: track.energy,
@@ -148,7 +149,7 @@ app.get('/plot_multiple', async function (req, res) {
 					acousticness: track.acousticness,
 					liveness: track.liveness,
 					valance: track.valance,
-					name: track_names.find( track => track.id === track.id).name
+					name: name
 				}
 			})
 

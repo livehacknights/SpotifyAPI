@@ -5,53 +5,102 @@
 
 <body>
 	Spotify Plot:
-	
-	<div id='myDiv' style="height:100%;width:100%"><!-- Plotly chart will be drawn inside this DIV --></div>
 
-<script type="text/javascript">
-	var songValues = {{ songValues|safe }}
-	var x = []
-	var y = []
-	var z = []
-	var names = []
+	<div id='myDiv' style="height:100%;width:100%">
+		<!-- Plotly chart will be drawn inside this DIV -->
+	</div>
 
-	songValues.map(song => {
-		x.push(song.danceability)
-		y.push(song.energy)
-		z.push(song.liveness)
-		names.push(song.name)
-	})
+	<script type="text/javascript">
+		var songValues = {{ songValues| safe }}
+		var x = []
+		var y = []
+		var z = []
+		var names = []
 
-var trace1 = {
-	x: x,
-	y: y,
-	z: z,
-	mode: 'markers',
-	type: 'scatter3d',
-	name: 'Song Details',
-	text: names,
-	marker: { size: 5 }
-};
+		songValues[0].tracks.map(song => {
+			x.push(song.danceability)
+			y.push(song.energy)
+			z.push(song.liveness)
+			names.push(song.name)
+		})
 
-var data = [ trace1 ];
+		var trace1 = {
+			x: x,
+			y: y,
+			z: z,
+			mode: 'markers',
+			type: 'scatter3d',
+			name: 'Angry',
+			text: names,
+			marker: { size: 5 }
+		};
 
-var layout = {
-  xaxis: {
-		title: "Danceability",
-    range: [ 0.0, 1.0 ]
-  },
-  yaxis: {
-		title: "Energy",
-    range: [ 0.0, 1.0 ]
-  },
-	zaxis: {
-		title: "Liveness",
-    range: [ 0.0, 1.0 ]
-  },
-  title:'Data Labels Hover'
-};
+		x = []
+		y = []
+		z = []
+		names = []
 
-Plotly.newPlot('myDiv', data, layout);
+		songValues[1].tracks.map(song => {
+			x.push(song.danceability)
+			y.push(song.energy)
+			z.push(song.liveness)
+			names.push(song.name)
+		})
 
-</script>
+		var trace2 = {
+			x: x,
+			y: y,
+			z: z,
+			mode: 'markers',
+			type: 'scatter3d',
+			name: 'Happy',
+			text: names,
+			marker: { size: 5 }
+		};
+
+		x = []
+		y = []
+		z = []
+		names = []
+
+		songValues[2].tracks.map(song => {
+			x.push(song.danceability)
+			y.push(song.energy)
+			z.push(song.liveness)
+			names.push(song.name)
+		})
+
+		var trace3 = {
+			x: x,
+			y: y,
+			z: z,
+			mode: 'markers',
+			type: 'scatter3d',
+			name: 'Sad',
+			text: names,
+			marker: { size: 5 }
+		};
+
+
+		var data = [trace1, trace2, trace3];
+
+		var layout = {
+			xaxis: {
+				title: "Danceability",
+				range: [0.0, 1.0]
+			},
+			yaxis: {
+				title: "Energy",
+				range: [0.0, 1.0]
+			},
+			zaxis: {
+				title: "Liveness",
+				range: [0.0, 1.0]
+			},
+			title: 'Data Labels Hover'
+		};
+
+		Plotly.newPlot('myDiv', data, layout);
+
+	</script>
 </body>
