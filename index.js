@@ -95,8 +95,11 @@ app.get('/login', function (req, res) {
   res.render('login.html', {user: req.user});
 });
 
-app.get('/plot', function (req, res) {
-	api().getAudioFeaturesForTracks(['5iSEsR6NKjlC9SrIJkyL3k','5PX4uS1LqlWEPL69phPVQQ']).then(resp => {
+app.get('/plot', async function (req, res) {
+	var playlist = await api().getPlaylistTracks('0OYfvSQr9XkNlHq3LVoaYW')
+	var tracks = playlist.body.items.map(item => item.track.id)
+
+	api().getAudioFeaturesForTracks(tracks).then(resp => {
 		var songValues_arr = resp.body.audio_features.map(async (track) => {
 			var track_details = await api().getTrack(track.id)
 			console.log("TRACK: ", track)

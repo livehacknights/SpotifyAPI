@@ -6,28 +6,31 @@
 <body>
 	Spotify Plot:
 	
-	<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+	<div id='myDiv' style="height:100%;width:100%"><!-- Plotly chart will be drawn inside this DIV --></div>
 
 <script type="text/javascript">
 	var songValues = {{ songValues|safe }}
 	var x = []
 	var y = []
+	var z = []
 	var names = []
 
 	songValues.map(song => {
 		x.push(song.danceability)
 		y.push(song.energy)
+		z.push(song.liveness)
 		names.push(song.name)
 	})
 
-	var trace1 = {
-  x: x,
+var trace1 = {
+	x: x,
 	y: y,
-  mode: 'markers',
-  type: 'scatter',
-  name: 'Song Details',
-  text: names,
-  marker: { size: 12 }
+	z: z,
+	mode: 'markers',
+	type: 'scatter3d',
+	name: 'Song Details',
+	text: names,
+	marker: { size: 5 }
 };
 
 var data = [ trace1 ];
@@ -39,6 +42,10 @@ var layout = {
   },
   yaxis: {
 		title: "Energy",
+    range: [ 0.0, 1.0 ]
+  },
+	zaxis: {
+		title: "Liveness",
     range: [ 0.0, 1.0 ]
   },
   title:'Data Labels Hover'
