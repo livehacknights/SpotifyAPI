@@ -123,6 +123,53 @@ app.get('/plot', async function (req, res) {
 	})
 });
 
+app.get('/plot_multiple', async function (req, res) {
+	var playlists = ['6Z7FzLouu1F58nJjHSQduZ','4nCrH6pOa7tVzhkRmC5cZM','1N1KipdbAGYACafc0LOm4j']
+	var pl_tracks = await Promise.all(playlists.map(async playlist => await api().getPlaylistTracks(playlist)))
+
+	var pl_arr = pl_tracks.map(async responses => {
+		var tracks = responses.body.items.map(item => item.track.id)
+		var track_names = responses.body.items.map(item => { 
+			return {
+				id: item.track.id,
+				name: item.track.name
+			}
+		})
+
+		var resp = await api().getAudioFeaturesForTracks(tracks)
+
+		var songValues_arr = resp.body.audio_features
+			.filter(track => track).map(async (track) => {
+				// console.log("TRACK: ", track)
+				return {
+					danceability: track.danceability,
+					energy: track.energy,
+					speechiness: track.speechiness,
+					acousticness: track.acousticness,
+					liveness: track.liveness,
+					valance: track.valance,
+					name: track_names.find( track => track.id === track.id).name
+				}
+			})
+
+
+		return {
+			playlist: "playlist...",
+			tracks: await Promise.all(songValues_arr)
+		}
+	})
+
+	console.log("Done with pl_arr");
+	console.log(pl_arr)
+
+	Promise.all(pl_arr).then((values) => {
+	
+		console.log("songValues_arr: ", values)
+		console.log("SongValues: ", JSON.stringify(values))
+		res.render('plot_multiple.html', {songValues: JSON.stringify(values)});
+	}).catch(err => console.log(err));
+});
+
 // GET /auth/spotify
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request. The first step in spotify authentication will involve redirecting
