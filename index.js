@@ -95,9 +95,30 @@ app.get('/login', function (req, res) {
   res.render('login.html', {user: req.user});
 });
 
-//app.get('/...', function (req, res) {
-//
-//});
+app.get('/plot', function (req, res) {
+	api().getAudioFeaturesForTracks(['5iSEsR6NKjlC9SrIJkyL3k','5PX4uS1LqlWEPL69phPVQQ']).then(resp => {
+		var songValues_arr = resp.body.audio_features.map(async (track) => {
+			var track_details = await api().getTrack(track.id)
+			console.log("TRACK: ", track)
+			return {
+				danceability: track.danceability,
+				energy: track.energy,
+				speechiness: track.speechiness,
+				acousticness: track.acousticness,
+				liveness: track.liveness,
+				valance: track.valance,
+				name: track_details.body.name
+			}
+		})
+
+		Promise.all(songValues_arr).then((values) => {
+		
+			console.log("songValues_arr: ", values)
+			console.log("SongValues: ", JSON.stringify(values))
+			res.render('plot.html', {songValues: JSON.stringify(values)});
+		});
+	})
+});
 
 // GET /auth/spotify
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -131,11 +152,11 @@ app.get('/logout', function (req, res) {
 });
 
 // Start the server manually
-startServer = function() {
+//startServer = function() {
 	app.listen(port, function () {
 		console.log('App is listening on port ' + port);
 	});
-}
+//}
 
 
 // Simple route middleware to ensure user is authenticated.
@@ -156,11 +177,15 @@ api = function() {
 	return spotifyApi
 }
 
+hola = function() {
+	console.log("Hola Mundo")
+}
+
 // Repl
 const repl = require('repl')
 
 const repl_options = {
-  prompt:  `(Spotify) >`,
+  prompt:  `(Spotify LHN) >`,
   useColors: true,
   breakEvalOnSigint: true
 }

@@ -1,0 +1,50 @@
+<head>
+	<!-- Load plotly.js into the DOM -->
+	<script src='https://cdn.plot.ly/plotly-2.0.0-rc.2.min.js'></script>
+</head>
+
+<body>
+	Spotify Plot:
+	
+	<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+
+<script type="text/javascript">
+	var songValues = {{ songValues|safe }}
+	var x = []
+	var y = []
+	var names = []
+
+	songValues.map(song => {
+		x.push(song.danceability)
+		y.push(song.energy)
+		names.push(song.name)
+	})
+
+	var trace1 = {
+  x: x,
+	y: y,
+  mode: 'markers',
+  type: 'scatter',
+  name: 'Song Details',
+  text: names,
+  marker: { size: 12 }
+};
+
+var data = [ trace1 ];
+
+var layout = {
+  xaxis: {
+		title: "Danceability",
+    range: [ 0.0, 1.0 ]
+  },
+  yaxis: {
+		title: "Energy",
+    range: [ 0.0, 1.0 ]
+  },
+  title:'Data Labels Hover'
+};
+
+Plotly.newPlot('myDiv', data, layout);
+
+</script>
+</body>
